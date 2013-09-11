@@ -1,3 +1,4 @@
-## Auto Generating Gallery
+auto-generating-gallery
+=======================
 
-Created with [Laravel 4](http://laravel.com)
+Pretty and easy gallery. Upload albumfolder via ftp -> Visit '/import' -> Done
