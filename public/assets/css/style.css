@@ -1,0 +1,180 @@
+html {
+	overflow-y: scroll;
+}
+
+.grid a {
+	display: block;
+	position: relative;
+	background: #bbbbbb;
+}
+
+.grid a .dim {
+	display: block;
+	position: absolute;
+	background: #ffffff;
+	opacity: 0.3;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+
+	-webkit-backface-visibility: hidden;
+	-moz-backface-visibility:    hidden;
+	-ms-backface-visibility:     hidden;
+	backface-visibility:         hidden;
+
+	-webkit-transition: opacity 300ms linear;
+	-moz-transition:    opacity 300ms linear;
+	-ms-transition:     opacity 300ms linear;
+	-o-transition:      opacity 300ms linear;
+	transition:         opacity 300ms linear;
+}
+.grid a:hover .dim {
+	opacity: 0;
+
+	-webkit-transition: opacity 300ms linear;
+	-moz-transition:    opacity 300ms linear;
+	-ms-transition:     opacity 300ms linear;
+	-o-transition:      opacity 300ms linear;
+	transition:         opacity 300ms linear;
+}
+
+
+.grid a .title {
+	display: block;
+	position: absolute;
+	background: #000000;
+	opacity: 0.2;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: 5px;
+	border-radius: 0;
+	text-align: center;
+	white-space: normal;
+
+	-webkit-transition: opacity 300ms linear;
+	-moz-transition:    opacity 300ms linear;
+	-ms-transition:     opacity 300ms linear;
+	-o-transition:      opacity 300ms linear;
+	transition:         opacity 300ms linear;
+}
+.grid a:hover .title {
+	opacity: 0.5;
+
+	-webkit-transition: opacity 300ms linear;
+	-moz-transition:    opacity 300ms linear;
+	-ms-transition:     opacity 300ms linear;
+	-o-transition:      opacity 300ms linear;
+	transition:         opacity 300ms linear;
+}
+
+.fullimagecontainer img {
+	margin: 0 auto;
+}
+
+.breadcrumb {
+	padding: 8px 15px;
+	margin-bottom: 20px;
+	list-style: none;
+	background-color: #f5f5f5;
+	border-radius: 0;
+}
+
+.page-header {
+	margin: 20px 0 20px;
+}
+
+.page-footer {
+	padding-top: 9px;
+	margin: 20px 0 20px;
+	border-top: 1px solid #eeeeee;
+}
+
+.navigation {
+	margin-bottom: 10px;
+}
+
+.social {
+	padding-top: 9px;
+	margin: 20px 0 0;
+	border-top: 1px solid #eeeeee;
+	height: 29px;
+}
+
+.social_links {
+	display: inline-block;
+	height: 20px;
+}
+.social_links img {
+	vertical-align: baseline;
+}
+
+.fb_likes {
+	width: 140px;
+}
+
+.twitter-share-button {
+	width: 90px !important;
+}
+
+.comments {
+	padding-top: 9px;
+	margin: 9px 0 20px;
+	border-top: 1px solid #eeeeee;
+}
+
+.comments .fb_iframe_widget,
+.comments .fb_iframe_widget span,
+.comments .fb_iframe_widget iframe[style] {
+	width: 100% !important;
+}
+
+.fb_btns {
+	padding-top: 9px;
+	margin: 6px 0 0;
+	border-top: 1px solid #eeeeee;
+}
+
+#loader.loading {
+	background: url('../img/load.gif') no-repeat center center;
+}
+
+#loader.loaderror {
+	background: url('../img/loaderror.gif') no-repeat center center;
+}
+
+.fullimage {
+	width: 100%;
+	/*min-height: 50px;*/
+}
+
+.img-full-height {
+	max-height: 100%;
+}
+
+.img-description {
+	padding: 8px 15px;
+	margin-top: 10px;
+	background-color: #f5f5f5;
+}
+
+.alert {
+	padding: 15px;
+	margin-bottom: 10px;
+	border: 0;
+	border-radius: 0;
+}
+.alert-dismissable .close {
+	position: inherit;
+}
+
+
+@media (max-width:991px){
+	.grid a .dim {
+		opacity: 0;
+	}
+	.grid a .title {
+		opacity: 0.5;
+	}
+}
