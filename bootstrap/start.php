@@ -29,7 +29,7 @@ $app->redirectIfTrailingSlash();
 $env = $app->detectEnvironment(array(
 
 	'local'                    => array('localhost'),
-	'production/martindilling' => array('gallery.martindilling.com'),
+	'production/martindilling' => array('gallerydemo.martindilling.com'),
 
 ));
 

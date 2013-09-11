@@ -56,7 +56,7 @@
 	@endif
 @yield('main')
 		<div class="page-footer text-center">
-			<small class="text-muted">Auto Generating Gallery by Martin Dilling-Hansen</small>
+			<small class="text-muted"><a href="https://github.com/martindilling/auto-generating-gallery" target="_blank">Auto Generating Gallery</a> by Martin Dilling-Hansen</small>
 		</div>
 	</div>
 
