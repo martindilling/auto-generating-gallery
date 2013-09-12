@@ -17,6 +17,3 @@ Route::get('import', 'GalleryController@import');
 
 Route::get('{album_folder}', 'GalleryController@showAlbum');
 Route::get('{album_folder}/{image_file}', 'GalleryController@showImage');
-
-Route::get('album/{id}', 'GalleryController@showAlbum');
-Route::get('album/{album_id}/image/{image_file}', 'GalleryController@showImage');
