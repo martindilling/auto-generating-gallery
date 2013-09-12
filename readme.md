@@ -6,8 +6,12 @@ Auto Generating Gallery
 **Pretty, simple and easy gallery.**
 
 1. Upload albumfolder via ftp
-2. Visit http://domain.com/import
+2. Visit domain.com/import
 3. Done ;)
+
+![Preview](http://gallerydemo.martindilling.com/preview-album.png)
+
+***Sorry for the bad description and guide, but you are all more than welcome to help with issues and pull requests, both for the readme and the code ;)***
 
 ## Installation
 
@@ -47,6 +51,3 @@ imagefile, and write the description in that file.
 To create the album, create a 'ready.txt' file in the 'uploads' folder, and
 visit the page http://domain.com/import, and it will create the nessesary files
 and create the albums in the database :)
-
-
-*Sorry for the bad description and guide, but you are all more than welcome to help with issues and pull requests, both for the readme and the code ;)*
