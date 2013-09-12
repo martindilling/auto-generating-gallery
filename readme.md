@@ -4,6 +4,7 @@ Auto Generating Gallery
 [See the demo](http://gallerydemo.martindilling.com)
 
 **Pretty, simple and easy gallery.**
+
 1. Upload albumfolder via ftp
 2. Visit http://domain.com/import
 3. Done ;)
@@ -34,4 +35,3 @@ imagefile, and write the description in that file.
 To create the album, create a 'ready.txt' file in the 'uploads' folder, and
 visit the page http://domain.com/import, and it will create the nessesary files
 and create the albums in the database :)
-
