@@ -10,14 +10,11 @@ class GalleryController extends BaseController {
 
 			if ( ! $files->import() ) {
 				$errors = $files->messages()->get('error');
-				return Redirect::to('/')
-					->with('error', $errors[0]);
+				return Redirect::to('/')->with('error', $errors[0]);
 			}
-			return Redirect::to('/')
-				->with('success', 'Done importing images.');
+			return Redirect::to('/')->with('success', 'Done importing images.');
 		}
-		return Redirect::to('/')
-			->with('error', 'Not ready for import.');
+		return Redirect::to('/')->with('error', 'Not ready for import.');
 	}
 
 	public function showAlbums()

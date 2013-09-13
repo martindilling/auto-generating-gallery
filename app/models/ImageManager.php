@@ -1,7 +1,6 @@
 <?php
 
 use Patchwork\Utf8 as UTF8;
-// use FilesystemIterator;
 use Symfony\Component\Finder\Finder;
 use Illuminate\Support\MessageBag;
 
@@ -70,7 +69,12 @@ class ImageManager {
 	}
 
 	/**
-	 * Convert a string to a URL-safe string.
+	 * Convert a string to a URL safe string
+	 *
+	 * @param  string $str
+	 * @param  array  $replace
+	 * @param  string $separator
+	 * @return string
 	 */
 	protected function urlSafe($str, $replace=array(), $separator = '-')
 	{
@@ -93,43 +97,67 @@ class ImageManager {
 
 
 	/**
-	 * Add a message to the collection of messages.
+	 * Add a message to the key in the MessageBag
+	 *
+	 * @param string $key
+	 * @param string $message
 	 */
-	protected function addMessage($attribute, $message)
+	protected function addMessage($key, $message)
 	{
-		$this->messages->add($attribute, $message);
+		$this->messages->add($key, $message);
 	}
 
 	/**
-	 * Add a message to the collection of messages.
+	 * Add a error to the MessageBag
+	 *
+	 * @param string $errormessage
 	 */
 	protected function addError($errormessage)
 	{
 		$this->addMessage('error', $errormessage);
 	}
 
-	protected function addToArray($filepath)
+	/**
+	 * Strips out a dir from a path at the given position
+	 *
+	 * @param  string $path
+	 * @param  int    $pos
+	 * @return string/false
+	 */
+	protected function stripDirFromPath($path, $pos)
 	{
-		$info = pathinfo($filepath);
+		$patharray = explode(DIRECTORY_SEPARATOR, $path);
 
-		$folderarray = explode(DIRECTORY_SEPARATOR, $info['dirname']);
-		unset($folderarray[0]);
-		$folder = implode(DIRECTORY_SEPARATOR, $folderarray);
-
-		if ( File::exists($info['dirname'] . DIRECTORY_SEPARATOR . $info['filename'] . '.txt') )
+		if (count($patharray) > $pos)
 		{
-			$text = File::get($info['dirname'] . DIRECTORY_SEPARATOR . $info['filename'] . '.txt');
+			unset($patharray[$pos]);
+			return implode(DIRECTORY_SEPARATOR, $patharray);
 		}
 
-		$this->files[$folder][] = array(
-			'filename'      => $info['filename'],
-			'newfilename'   => $this->urlSafe($info['filename']),
-			'ext'           => File::extension($filepath),
-			'text'          => (isset($text)) ? $text : null,
-		);
+		return false;
 	}
 
-	protected function readFiles($directory, $options = null)
+	/**
+	 * Creates a pathstring from an array of segments
+	 *
+	 * @param  array  $segments
+	 * @param  string $seperator
+	 * @return string/false
+	 */
+	protected function createPath($segments, $seperator = DIRECTORY_SEPARATOR)
+	{
+		if ( ! is_array($segments) ) return false;
+
+		return implode($seperator, $segments);
+	}
+
+	/**
+	 * Read files and add them to $this->files
+	 *
+	 * @param  string $directory
+	 * @return boolean
+	 */
+	protected function readFiles($directory)
 	{
 		if ( ! File::isDirectory($directory)) return false;
 
@@ -165,7 +193,52 @@ class ImageManager {
 		return true;
 	}
 
-	public function toDB()
+	/**
+	 * Add file details to $this->files
+	 *
+	 * @param string $filepath
+	 */
+	protected function addToArray($filepath)
+	{
+		$info = pathinfo($filepath);
+
+		$albumName = $this->stripDirFromPath($info['dirname'], 0);
+
+		$desciptionFilepath = $this->createPath(array(
+			$info['dirname'],
+			$info['filename'] . '.txt'
+		));
+
+		$albumCoverFilepath = $this->createPath(array(
+			$info['dirname'],
+			$info['filename'] . '_cover.txt'
+		));
+
+		if ( File::exists($desciptionFilepath) )
+		{
+			$text = File::get($desciptionFilepath);
+		}
+
+		if ( File::exists($albumCoverFilepath) )
+		{
+			$cover = 1;
+		}
+
+		$this->files[$albumName][] = array(
+			'filename'      => $info['filename'],
+			'newfilename'   => $this->urlSafe($info['filename']),
+			'ext'           => File::extension($filepath),
+			'text'          => (isset($text)) ? $text : null,
+			'cover'         => (isset($cover)) ? true : false,
+		);
+	}
+
+	/**
+	 * Add information from $this->files to the database
+	 *
+	 * @return boolean
+	 */
+	protected function toDB()
 	{
 		if ( ! $this->files ) {
 			$this->addError('No files where found!');
@@ -194,7 +267,6 @@ class ImageManager {
 				$i = ($i) ? $i : new Image;
 
 				$i->image = $image['newfilename'] . '.' . $image['ext'];
-				// $i->thumb = $image['newfilename'] . '.' . $image['ext'];
 				$i->title = $image['filename'];
 				$i->text  = $image['text'];
 				$i->album()->associate($a);
@@ -204,12 +276,41 @@ class ImageManager {
 					$this->addError('Error saving image to database!');
 					return false;
 				}
+
+				if ($image['cover']) {
+					$a->image_id = $i->id;
+					$a->save();
+				}
 			}
 		}
 		return true;
 	}
 
-	public function copyFiles()
+	/**
+	 * Create a thumbnail from a file
+	 *
+	 * @param  string $file
+	 * @param  string $thumb
+	 * @param  int    $size
+	 */
+	protected function createThumb($file, $thumb, $size)
+	{
+		// open file a image resource
+		$img = ImageLib::make($file);
+
+		// crop the best fitting 1:1 ratio and resize to the size given
+		$img->grab($size);
+
+		// save the same file as jpeg with default quality
+		$img->save($thumb);
+	}
+
+	/**
+	 * Copy files to albums folder from information in $this->filesize()
+	 *
+	 * @return boolean
+	 */
+	protected function copyFiles()
 	{
 		if ( ! $this->files ) {
 			$this->addError('No files where found!');
@@ -218,14 +319,25 @@ class ImageManager {
 
 		foreach ($this->files as $album => $images)
 		{
-			// $album = $this->urlSafe($album);
 			$album = $album;
 			$targetalbum = ($album) ? $this->urlSafe($album) : 'undefined';
 
-			$folder  = public_path() . DIRECTORY_SEPARATOR . $this->imagesfolder . DIRECTORY_SEPARATOR . $targetalbum;
-			$path    = public_path() . DIRECTORY_SEPARATOR . $this->uploadsfolder . DIRECTORY_SEPARATOR . $album . DIRECTORY_SEPARATOR;
-			$target  = public_path() . DIRECTORY_SEPARATOR . $this->imagesfolder . DIRECTORY_SEPARATOR . $targetalbum . DIRECTORY_SEPARATOR;
-			$thumbs  = $target.'thumbs' . DIRECTORY_SEPARATOR;
+			$path   = $this->createPath(array(
+				public_path(),
+				$this->uploadsfolder,
+				$album
+			));
+
+			$target = $this->createPath(array(
+				public_path(),
+				$this->imagesfolder,
+				$targetalbum
+			));
+
+			$thumbs = $this->createPath(array(
+				$target,
+				'thumbs'
+			));
 
 			if ( ! File::isDirectory($thumbs) ) {
 				if ( ! File::makeDirectory($thumbs, 0777, true) ) {
@@ -236,27 +348,47 @@ class ImageManager {
 
 			foreach ($images as $image)
 			{
-				$oldfile = $image['filename'].'.'.$image['ext'];
-				$newfile = $image['newfilename'].'.'.$image['ext'];
+				$oldfile  = $this->createPath(array(
+					$path,
+					$image['filename'].'.'.$image['ext']
+				));
 
-				if ( ! File::copy($path.$oldfile, $target.$newfile) ) {
+				$newfile  = $this->createPath(array(
+					$target,
+					$image['newfilename'].'.'.$image['ext']
+				));
+
+				$newthumb = $this->createPath(array(
+					$thumbs,
+					$image['newfilename'].'.'.$image['ext']
+				));
+
+
+				if ( ! File::copy($oldfile, $newfile) ) {
 					$this->addError('Error copying files!');
 					return false;
 				}
 
-				// open file a image resource
-				$img = ImageLib::make($target.$newfile);
-
-				// crop the best fitting 1:1 ratio (200x200) and resize to 200x200 pixel
-				$img->grab(Config::get('filegallery.thumbsize'));
-
-				// save the same file as jpeg with default quality
-				$img->save($thumbs.$newfile);
+				$this->createThumb($newfile, $newthumb, Config::get('filegallery.thumbsize'));
 			}
 		}
 		return true;
 	}
 
+	/**
+	 * Clean the uploads folder
+	 */
+	protected function cleanFolder()
+	{
+		File::cleanDirectory($this->uploadsfolder);
+	}
+
+	/**
+	 * Import the images from the uploads folder
+	 *
+	 * @param  boolean $clean
+	 * @return boolean
+	 */
 	public function import($clean = true)
 	{
 		if ( ! $this->copyFiles() ) return false;
@@ -269,11 +401,6 @@ class ImageManager {
 		return true;
 	}
 
-	public function cleanFolder()
-	{
-		File::cleanDirectory($this->uploadsfolder);
-	}
-
 	/**
 	 * An alternative more semantic shortcut to the message container.
 	 *
@@ -282,36 +409,6 @@ class ImageManager {
 	public function messages()
 	{
 		return $this->messages;
-	}
-
-	/**
-	 * Get the unique identifier for the user.
-	 *
-	 * @return mixed
-	 */
-	public function getFiles()
-	{
-		return $this->files;
-	}
-
-	/**
-	 * Get the unique identifier for the user.
-	 *
-	 * @return mixed
-	 */
-	public function getUploadsFolder()
-	{
-		return $this->uploadsfolder;
-	}
-
-	/**
-	 * Get the unique identifier for the user.
-	 *
-	 * @return mixed
-	 */
-	public function getImagesFolder()
-	{
-		return $this->imagesfolder;
 	}
 
 }
