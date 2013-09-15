@@ -9,7 +9,7 @@ Auto Generating Gallery
 2. Visit domain.com/import
 3. Done ;)
 
-![Preview](http://gallerydemo.martindilling.com/preview-album.png)
+![Preview](preview-album.png)
 
 ***Sorry for the bad description and guide, but you are all more than welcome to help with issues and pull requests, both for the readme and the code ;)***
 
@@ -28,7 +28,44 @@ Change configuration of the gallery in *app/config/filegallery.php*
 
 That should be it ;)
 
-## Creating an album
+## Albums
+
+Albums will be created from the folders in the 'uploads' folder.
+The foldername will be used as the albumname, and the folders will be renamed to
+a more webfriendly name (strip special characers and replace spaces with dashes).
+
+![Albums](album.png)
+
+## Images
+
+Images will be created from the imagefiles in the album folders.
+Don't worry about the names they will be renamed to more webfriendly names
+(strip special characers and replace spaces with dashes).
+
+![Images](images.png)
+
+## Image descriptions
+
+To create a description for an image, create a *.txt file with the same name as
+the imagefile, and write the description in that file.
+
+![Description](descrption.png)
+
+## Album cover
+
+To set an image from the album as the cover picture, create an empty *.txt file,
+and name it '%imagefilename%_cover.txt'
+
+![Cover](cover.png)
+
+
+
+
+
+
+
+
+
 
 To create an album you upload a folder (the album) with images to the uploads
 folder configured in *app/config/filegallery.php* (default: 'uploads')
