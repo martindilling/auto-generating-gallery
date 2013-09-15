@@ -9,9 +9,19 @@ Auto Generating Gallery
 2. Visit domain.com/import
 3. Done ;)
 
-![Preview](preview-album.png)
+## Previews
 
-***Sorry for the bad description and guide, but you are all more than welcome to help with issues and pull requests, both for the readme and the code ;)***
+### Index view
+
+![Album preview](_sitealbums.png)
+
+### Album view
+
+![Album preview](_sitealbum.png)
+
+### Image view
+
+![Image preview](_siteimage.png)
 
 ## Installation
 
@@ -34,7 +44,7 @@ Albums will be created from the folders in the 'uploads' folder.
 The foldername will be used as the albumname, and the folders will be renamed to
 a more webfriendly name (strip special characers and replace spaces with dashes).
 
-![Albums](album.png)
+![Albums](_album.png)
 
 ## Images
 
@@ -42,49 +52,32 @@ Images will be created from the imagefiles in the album folders.
 Don't worry about the names they will be renamed to more webfriendly names
 (strip special characers and replace spaces with dashes).
 
-![Images](images.png)
+![Images](_images.png)
 
 ## Image descriptions
 
 To create a description for an image, create a *.txt file with the same name as
 the imagefile, and write the description in that file.
 
-![Description](descrption.png)
+![Description](_description.png)
 
 ## Album cover
 
 To set an image from the album as the cover picture, create an empty *.txt file,
 and name it '%imagefilename%_cover.txt'
 
-![Cover](cover.png)
+![Cover](_cover.png)
 
+## Ready file
 
+To avoid starting import before you have all the files uploaded and ready,
+create an empty *.txt file named 'ready.txt' to the 'uploads' folder when you
+are ready to import the files.
 
+![Cover](_ready.png)
 
+## Starting import
 
-
-
-
-
-
-To create an album you upload a folder (the album) with images to the uploads
-folder configured in *app/config/filegallery.php* (default: 'uploads')
-
-    - public
-        - uploads
-            - Album1           // Name of the album, folder will be made websafe on import
-                - Image1.jpg   // Image title, filename will be made websafe on import
-                - Image2.jpg
-                - Image2.txt   // Text file with description for Image2.jpg
-                - Image3.jpg
-            - Album2
-                - Image4.jpg
-                - Image5.jpg
-            - ready.txt        // Will only try to upload if this file exists
-
-Names of the folders created in the 'public/uploads' folder will be the album names.
-To create a description to an image create a *.txt file with the same name as the
-imagefile, and write the description in that file.
-To create the album, create a 'ready.txt' file in the 'uploads' folder, and
-visit the page http://domain.com/import, and it will create the nessesary files
-and create the albums in the database :)
+To start the import, make sure you have uploaded the files and created the
+ready-file. Then go to the route '/import', eg. mywebgallery.com/import.
+It will be working some time depending on the size of the images you want to import ;)
