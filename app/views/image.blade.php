@@ -5,14 +5,14 @@
 	<meta property="og:site_name"       content="{{ Config::get('filegallery.page.title') }}"/>
 	<meta property="og:url"             content="{{ url($image->album->folder.'/'.$image->image) }}" />
 	<meta property="og:title"           content="{{ $image->title }}" />
-	<meta name="description"            content="{{ ($image->text) ?: 'Image from the album '.$image->album->title }}">
-	<meta property="og:description"     content="{{ ($image->text) ?: 'Image from the album '.$image->album->title }}">
+	<meta name="description"            content="{{ ($image->text) ? html_entity_decode(strip_tags($image->text),ENT_QUOTES,'UTF-8') : 'Image from the album '.$image->album->title }}">
+	<meta property="og:description"     content="{{ ($image->text) ? html_entity_decode(strip_tags($image->text),ENT_QUOTES,'UTF-8') : 'Image from the album '.$image->album->title }}">
 	<meta property="og:image"           content="{{ asset($image->imageurl) }}" />
 
 	<meta name="twitter:card"           content="photo">
 	<meta name="twitter:url"            content="{{ url($image->album->folder.'/'.$image->image) }}">
 	<meta name="twitter:title"          content="{{ $image->title }}">
-	<meta name="twitter:description"    content="{{ ($image->text) ?: 'Image from the album '.$image->album->title }}">
+	<meta name="twitter:description"    content="{{ ($image->text) ? html_entity_decode(strip_tags($image->text),ENT_QUOTES,'UTF-8') : 'Image from the album '.$image->album->title }}">
 	<meta name="twitter:image"          content="{{ asset($image->imageurl) }}">
 @stop
 

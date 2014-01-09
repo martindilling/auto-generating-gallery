@@ -28,6 +28,10 @@ class GalleryController extends BaseController {
 	{
 		$album = Album::with('images')->where('folder', $album_folder)->first();
 
+		if ( ! $album ) {
+			App::abort(404, 'Album wasn\'t found.');
+		}
+
 		return View::make('album', compact('album'));
 	}
 
@@ -36,7 +40,13 @@ class GalleryController extends BaseController {
 		$album = Album::with('images')->where('folder', $album_folder)->first();
 		// $image = Image::with('album')->find($image_id);
 
+		if ( ! $album ) {
+			App::abort(404, 'Album wasn\'t found.');
+		}
+
 		$count = $album->images->count();
+
+		$success = false;
 
 		for ($i=0; $i < $count; $i++) {
 			if ($album->images[$i]->image == $image_file) {
@@ -55,7 +65,13 @@ class GalleryController extends BaseController {
 				} else {
 					$image->next = $album->images[$i+1];
 				}
+
+				$success = true;
 			}
+		}
+
+		if ( ! $success ) {
+			App::abort(404, 'Image wasn\'t found.');
 		}
 
 		return View::make('image', compact('image'));
