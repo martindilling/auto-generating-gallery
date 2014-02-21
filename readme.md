@@ -53,7 +53,7 @@ And migrate the database with:
 
     artisan migrate
 
-Change configuration of the gallery in `app/config/filegallery.php`
+Change configuration of the gallery in `app/config/filegallery.php`, eg. set the Facebook App id for the commenting system and Google analytics id.
 
 That should be it ;)
 
